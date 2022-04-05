@@ -3,8 +3,11 @@ close all;
 clc;
 
 % Importing data 
-IMU0x2Dalpha = importdata('IMU0x2Dalpha.mat'); 
-IMU0x2Domega = importdata('IMU0x2Domega.mat');
+% IMU0x2Dalpha = importdata('IMU0x2Dalpha.mat'); 
+% IMU0x2Domega = importdata('IMU0x2Domega.mat');
+
+IMU0x2Dalpha = readmatrix('Accelerometer.xlsx');
+IMU0x2Domega = readmatrix('Gyroscope.xlsx');
 
 time = IMU0x2Domega(:,1)';
 
@@ -14,12 +17,19 @@ intervals(2:length(intervals)) = time(2:length(time))-time(1:length(time)-1);
 
 total_sample = length(IMU0x2Domega(:,1));
 
-offset_acc_x = 33123;
-offset_acc_y = 33276;
-offset_acc_z = 32360;
-offset_gyro_x = 32768;
-offset_gyro_y = 32466;
-offset_gyro_z = 32485;
+% offset_acc_x = 33123;
+% offset_acc_y = 33276;
+% offset_acc_z = 32360;
+% offset_gyro_x = 32768;
+% offset_gyro_y = 32466;
+% offset_gyro_z = 32485;
+
+offset_acc_x = 0;
+offset_acc_y = 0;
+offset_acc_z = 0;
+offset_gyro_x = 0;
+offset_gyro_y = 0;
+offset_gyro_z = 0;
 
 a_xp = IMU0x2Dalpha(:,2)' - offset_acc_x*ones(1,total_sample);
 a_yp = IMU0x2Dalpha(:,3)' - offset_acc_y*ones(1,total_sample);
@@ -86,7 +96,7 @@ for times_the_var = 1:max_times_the_var
     samples = 0;
     start = 0;
 
-    falg = 0;
+    flag = 0;
     
     if filter(1) == 0
     
@@ -164,7 +174,8 @@ for times_the_var = 1:max_times_the_var
     % minimization
     selectedAccData = selected_data;
     
-    theta_pr = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+%     theta_pr = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    theta_pr = [0, 0, 0, 9.8/1000, 9.8/1000, 9.8/1000, 0, 0, 0];
     
     ObjectiveFunction = @(theta_pr) accCostFunctLSQNONLIN(theta_pr, selectedAccData);
     options = optimset('MaxFunEvals', 150000, 'MaxIter', 6000, 'TolFun', 10^(-10));

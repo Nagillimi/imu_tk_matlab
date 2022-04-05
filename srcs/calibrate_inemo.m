@@ -1,7 +1,7 @@
 clear all;
 close all;
 clc;
-experim=1;
+experim=2;
 format longg
 % Importing data
 switch (experim)
@@ -68,9 +68,42 @@ switch (experim)
         % characteristics of iNemo
         freq=50; % how many samples we have in one second
         Tinit= 110; % how long is the initial static period
-end
-% } Huai
+    % } Huai
+    case 2        
+        % Joint Performance Adafruit Sensors
+%         data = readmatrix('output_2022-04-03_09-43-55.log');
+        data = readmatrix('output_2022-04-05_08-53-17.log');
+%         data = readmatrix('Test Data Units.txt');
 
+        IMU0x2Dalpha = data(:,1:4);
+        IMU0x2Domega = data(:,[1,5:7]);
+        % gravity magnitude at the experiment site
+        magnitude = 9.81;
+        % the accelerometer calibration parameters initial values
+        theta_pr = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        % gyro calibration parameter settings
+        r = (2^16-1)/(2*4.363);
+        theta_pr_gyro = [1/r,0,0,0,1/r,0,0,0,1/r];
+%         theta_pr_gyro = [1,0,0,0,1,0,0,0,1];
+        
+        % my supposed value for Joint Performance Sensors
+        DS_a_scale = diag([1, 1, 1]);
+        DS_a_misal = [1.00, 0.00, 0.0; 0.0, 1.00, 0.0; 0.0, 0.0, 1.00];
+        DS_g_scale = diag([1, 1, 1]);
+        DS_g_misal = [1.00, 0.0, 0.0; 0.00, 1.00, 0.0; 0.0, 0.0, 1.00];
+        
+        % offset for Joint Performance Sensors
+        offset_acc_x = 0;
+        offset_acc_y = 0;
+        offset_acc_z = 0;
+        offset_gyro_x = 0;
+        offset_gyro_y = 0;
+        offset_gyro_z = 0;
+        % characteristics of Joint Performance Setup
+        freq=100; % how many samples we have in one second
+        Tinit= 100; % how long is the initial static period
+end
 time = IMU0x2Domega(:,1)';
 
 intervals = zeros(1, length(time));
