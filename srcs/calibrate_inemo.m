@@ -1,4 +1,4 @@
-clear all;
+clear;
 close all;
 clc;
 experim=2;
@@ -71,22 +71,22 @@ switch (experim)
     % } Huai
     case 2        
         % Joint Performance Adafruit Sensors
-%         data = readmatrix('output_2022-04-03_09-43-55.log');
-        data = readmatrix('output_2022-04-05_08-53-17.log');
+        data = readmatrix('IMU-4-output_2022-11-27_17-18-49.log');
 %         data = readmatrix('Test Data Units.txt');
 
         IMU0x2Dalpha = data(:,1:4);
         IMU0x2Domega = data(:,[1,5:7]);
+
         % gravity magnitude at the experiment site
         magnitude = 9.81;
         % the accelerometer calibration parameters initial values
         theta_pr = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         % gyro calibration parameter settings
-        r = (2^16-1)/(2*4.363);
-        theta_pr_gyro = [1/r,0,0,0,1/r,0,0,0,1/r];
-%         theta_pr_gyro = [1,0,0,0,1,0,0,0,1];
-        
+        r = (2^(16-1))/(2*34.91);
+%         theta_pr_gyro = [1/r,0,0,0,1/r,0,0,0,1/r];
+        theta_pr_gyro = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+
         % my supposed value for Joint Performance Sensors
         DS_a_scale = diag([1, 1, 1]);
         DS_a_misal = [1.00, 0.00, 0.0; 0.0, 1.00, 0.0; 0.0, 0.0, 1.00];
@@ -101,8 +101,8 @@ switch (experim)
         offset_gyro_y = 0;
         offset_gyro_z = 0;
         % characteristics of Joint Performance Setup
-        freq=100; % how many samples we have in one second
-        Tinit= 100; % how long is the initial static period
+        freq=91; % how many samples we have in one second (integer!)
+        Tinit= 60; % how long is the initial static period
 end
 time = IMU0x2Domega(:,1)';
 
